@@ -28,11 +28,27 @@ app.use('/api/leads', leadRoutes);
 // MongoDB Connection
 mongoose
   .connect(MONGO_URI, {
-    family: 4
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 5000,
   })
   .then(() => {
-    console.log('Successfully connected to MongoDB.');
+    console.log('✅ Successfully connected to MongoDB Atlas!');
+    console.log(`Database: ${mongoose.connection.name}`);
   })
   .catch((err) => {
-    console.error('MongoDB connection error:', err.message);
+    console.error('❌ MongoDB connection error:', err.message);
+    console.error('Check your .env file and MongoDB Atlas credentials');
+    process.exit(1);
   });
+
+// Handle connection events
+mongoose.connection.on('disconnected', () => {
+  console.log('⚠️  MongoDB disconnected');
+});
+
+// Start Server
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
+
+module.exports = app;
