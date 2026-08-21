@@ -28,20 +28,23 @@ app.use('/api/leads', leadRoutes);
 // MongoDB Connection
 mongoose
   .connect(MONGO_URI, {
+    dbName: 'minicrm',  // Force database name
     maxPoolSize: 10,
-    serverSelectionTimeoutMS: 5000,
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+    family: 4,
   })
+
   .then(() => {
     console.log('✅ Successfully connected to MongoDB Atlas!');
     console.log(`Database: ${mongoose.connection.name}`);
   })
   .catch((err) => {
     console.error('❌ MongoDB connection error:', err.message);
-    console.error('Check your .env file and MongoDB Atlas credentials');
+    console.error('Verify: 1) IP whitelisted, 2) Database user active, 3) Network access');
     process.exit(1);
   });
 
-// Handle connection events
 mongoose.connection.on('disconnected', () => {
   console.log('⚠️  MongoDB disconnected');
 });
