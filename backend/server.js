@@ -39,11 +39,9 @@ mongoose
     console.log('✅ Successfully connected to MongoDB Atlas!');
     console.log(`Database: ${mongoose.connection.name}`);
   })
-  .catch((err) => {
-    console.error('❌ MongoDB connection error:', err.message);
-    console.error('Verify: 1) IP whitelisted, 2) Database user active, 3) Network access');
-    process.exit(1);
-  });
+.catch((err) => {
+  console.error('❌ MongoDB connection error:', err.message);
+});
 
 mongoose.connection.on('disconnected', () => {
   console.log('⚠️  MongoDB disconnected');
